@@ -1,0 +1,1 @@
+// OpenAI API呼び出し
