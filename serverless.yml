@@ -1,0 +1,93 @@
+service: chi-pochi-v2
+frameworkVersion: '4'
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-northeast-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 256
+  timeout: 30
+  environment:
+    STAGE: ${sls:stage}
+    # env から注入（.env.dev / .env.prod）
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    LINE_CHANNEL_ACCESS_TOKEN: ${env:LINE_CHANNEL_ACCESS_TOKEN}
+    LINE_CHANNEL_SECRET: ${env:LINE_CHANNEL_SECRET}
+    S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
+    SUNABAR_TOKEN: ${env:SUNABAR_TOKEN}
+    MOCK_DONATION: ${env:MOCK_DONATION, 'true'}  # まずはモックで安全運転
+
+    TABLE_USER_STATES: ${self:custom.tables.userStates}
+    TABLE_DONATION_HISTORY: ${self:custom.tables.donationHistory}
+
+  iam:
+    role:
+      statements:
+        # DynamoDB（user_states / donation_history）CRUD
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+            - dynamodb:Scan
+          Resource:
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.tables.userStates}
+            - arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.tables.donationHistory}
+        # S3 署名付きURL用に GetObject 権限（必要に応じて絞る）
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+          Resource: arn:aws:s3:::${env:S3_BUCKET_NAME}/*
+
+functions:
+  webhook:
+    handler: handlers/index.handler
+    events:
+      - httpApi:
+          path: /webhook
+          method: post
+    # 本番でLINEからの長文/遅延に備えるなら伸ばしてもよい
+    timeout: 15
+    memorySize: 256
+
+custom:
+  tables:
+    userStates: chiPochi-${sls:stage}-user_states
+    donationHistory: chiPochi-${sls:stage}-donation_history
+
+plugins:
+  - serverless-offline
+
+resources:
+  Resources:
+    UserStatesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tables.userStates}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+    DonationHistoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tables.donationHistory}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: S
+          - AttributeName: created_at
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user_id
+            KeyType: HASH
+          - AttributeName: created_at
+            KeyType: RANGE

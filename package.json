@@ -1,0 +1,31 @@
+{
+  "name": "chi-pochi-v2-",
+  "version": "1.0.0",
+  "description": "キーワードを送信すると、関連する都道府県スタンプを返すLINEチャットボットです。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miyukitakahata/chi-pochi-v2-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miyukitakahata/chi-pochi-v2-/issues"
+  },
+  "homepage": "https://github.com/miyukitakahata/chi-pochi-v2-#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.864.0",
+    "@aws-sdk/lib-dynamodb": "^3.864.0",
+    "@line/bot-sdk": "^10.1.1",
+    "axios": "^1.11.0",
+    "openai": "^5.12.2",
+    "serverless": "^4.18.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^14.4.0"
+  }
+}
