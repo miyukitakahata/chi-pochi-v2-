@@ -2,9 +2,13 @@
   "name": "chi-pochi-v2-",
   "version": "1.0.0",
   "description": "キーワードを送信すると、関連する都道府県スタンプを返すLINEチャットボットです。",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit",
+    "dev": "serverless offline --stage dev --aws-profile chi-pochi-dev",
+    "deploy:dev": "npm run typecheck && sls deploy --stage dev --aws-profile $AWS_PROFILE_DEV",
+    "deploy:prod": "npm run typecheck && sls deploy --stage prod --aws-profile $AWS_PROFILE_PROD"
   },
   "repository": {
     "type": "git",
@@ -26,6 +30,8 @@
     "serverless": "^4.18.0"
   },
   "devDependencies": {
-    "serverless-offline": "^14.4.0"
+    "@types/node": "^24.3.0",
+    "serverless-offline": "^14.4.0",
+    "typescript": "^5.9.2"
   }
 }

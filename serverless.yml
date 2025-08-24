@@ -54,13 +54,20 @@ functions:
     timeout: 15
     memorySize: 256
 
+plugins:
+  - serverless-offline
+  
 custom:
   tables:
     userStates: chiPochi-${sls:stage}-user_states
     donationHistory: chiPochi-${sls:stage}-donation_history
-
-plugins:
-  - serverless-offline
+  esbuild:
+    bundle: true
+    minify: true
+    sourcemap: true
+    target: node20
+    platform: node
+    concurrency: 10
 
 package:
   # デプロイで除外するものを指定
