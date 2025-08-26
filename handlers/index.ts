@@ -3,6 +3,8 @@
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
 import { replyMessage, replyText } from "../services/lineService";
 import { welcomeMessages } from "./messageHandler";
+import { getRelatedPrefecture } from "../services/openaiService";
+import { setPendingPref } from "../repos/userStatesRepo";
 // 署名検証を後で入れるなら validateSignature を使う
 
 export const handler: APIGatewayProxyHandlerV2 = async (event) => {
@@ -33,8 +35,25 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         return;
       }
 
-      // 以降は既存のロジック（OpenAI判定→pending保存 等）を順次追加していく
-      await replyText(replyToken, "OK！キーワードを受け取りました。次の実装へ…");
+      // 1)OpenAIで県名を判定
+      const prefName = await getRelatedPrefecture(text);
+
+      if (prefName === "該当なし") {
+        await replyText(
+          replyToken,
+          "ごめん、うまく判定できなかったよ…もう少しご当地っぽいワードで試してね！（例：ジンギスカン）"
+        );
+        return;
+      }
+
+      // 2)user_statesにpendingを保存（県名ベース）
+      await setPendingPref(e.source?.userId, prefName);
+
+      // 3)確認メッセージ
+      await replyMessage(replyToken, [
+        { type: "text", text: `「${text}」は${prefName}に関係があるみたい！` },
+        { type: "text", text: `100円寄付でスタンプゲット！寄付しますか？「はい」か「いいえ」で返してください` },
+      ])
       return;
     }
   }));
