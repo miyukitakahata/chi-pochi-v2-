@@ -13,3 +13,13 @@ export async function replyText(replyToken: string, text: string) {
 export async function  replyMessage(replyToken: string, message: Message[]) {
     return client.replyMessage(replyToken, message);
 }
+
+export async function replyImage(replyToken: string, imageUrl: string) {
+    return client.replyMessage(replyToken, [
+        {
+            type: "image",
+            originalContentUrl: imageUrl,
+            previewImageUrl: imageUrl,
+        },
+    ]);
+}
