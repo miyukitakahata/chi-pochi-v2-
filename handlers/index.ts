@@ -1,7 +1,7 @@
 // Lambdaのエントリーポイント
 // 受け取ったイベントの種類ごとに、なにを返信するかのルール分けを行う
 import { APIGatewayProxyHandlerV2 } from "aws-lambda";
-import { replyMessage, replyText } from "../services/lineService";
+import { replyImage, replyMessage, replyText } from "../services/lineService";
 import { welcomeMessages } from "./messageHandler";
 import { getRelatedPrefecture } from "../services/openaiService";
 import { clearPending, getUserState, setPendingPref } from "../repos/userStatesRepo";
@@ -57,18 +57,18 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
           return;
         }
 
-        // 1) PENDING作成（同時にpendingをクリア）※競合防止のためCondition付
-        let createdAt: string;
-        try {
-          const res = await createPendingWithStateClear({
-            userId,
-            prefectureName: prefName,
-            amount: 100,
-          });
-        } catch {
-          await replyText(replyToken, "同時操作が重なった可能性があります。もう一度ご当地ワードから試してね！");
+        // 1) PENDING作成（同時にpendingをクリア）
+        const res = await createPendingWithStateClear({
+          userId,
+          prefectureName: prefName,
+          amount: 100,
+        }).catch(() => null);      // 失敗時は null を返す
+
+        if (!res) {
+          await replyText(replyToken, "同時操作が重なった可能性があります。もう一度ご当地ワードから試してね。");
           return;
         }
+        const createdAt = res.created_at;
 
         // 2) 決済(sunabar/モック使用)
         const pay = await requestDonation(100, userId, prefName);
@@ -80,7 +80,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
           // 4) スタンプ画像URL(署名URL)取得→返信
           const url = await getStampUrl(prefName);
           if (url) {
-            await replyImagea(replyToken, url);
+            await replyImage(replyToken, url);
           } else {
             await replyText(replyToken, "寄付ありがとうございます！スタンプ画像の取得に失敗しました…🙏");
           }
@@ -105,7 +105,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       if (prefName === "該当なし") {
         await replyText(
           replyToken,
-          "ごめん、うまく判定できなかったよ…もう少しご当地っぽいワードで試してね！（例：ジンギスカン）"
+          "ごめん、都道府県が判定できなかったよ…もう少しご当地っぽいワードで試してね！（例：ジンギスカン）"
         );
         return;
       }

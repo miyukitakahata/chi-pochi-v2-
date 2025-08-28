@@ -1,8 +1,11 @@
 // 寄付API（モック切替可）
-// services/sunabarService.ts
 type SunabarResult =
   | { ok: true; txId: string }
   | { ok: false; reason: string };
+
+interface SunabarResponse {
+    transactionId?: string;
+}
 
 export async function requestDonation(amount: number, userId: string, prefecture: string): Promise<SunabarResult> {
   if (process.env.MOCK_DONATION === "true") {
@@ -33,7 +36,7 @@ export async function requestDonation(amount: number, userId: string, prefecture
       return { ok: false, reason: `HTTP ${res.status} ${text}` };
     }
 
-    const data = await res.json();
+    const data = (await res.json()) as SunabarResponse;
     // 例: { transactionId: "abc123" }
     return { ok: true, txId: data.transactionId ?? `sunabar-${Date.now()}` };
   } catch (err: any) {
