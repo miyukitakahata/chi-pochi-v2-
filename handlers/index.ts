@@ -115,8 +115,26 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
 
       // 3)確認メッセージ
       await replyMessage(replyToken, [
-        { type: "text", text: `「${text}」は${prefName}に関係があるみたい！` },
-        { type: "text", text: `100円寄付でスタンプゲット！寄付しますか？「はい」か「いいえ」で返してください` },
+        { 
+          type: "text", 
+          text: `「${text}」は${prefName}に関係があるみたい！` 
+        },
+        { 
+          type: "text", 
+          text: `100円寄付でスタンプゲット！寄付しますか？「はい」か「いいえ」で返してください`, 
+          quickReply: {
+            items: [
+              {
+                type: "action",
+                action: { type: "message", label: "はい", text: "はい" }
+              },
+              {
+                type: "action",
+                action: { type: "message", label: "いいえ", text: "いいえ" }
+              }
+            ]
+          }
+        },
       ])
       return;
     }
