@@ -5,6 +5,14 @@
 
 ---
 
+## 📱 LINEで試す
+
+[LINE友だち追加はこちら](https://lin.ee/Au5uUYK)
+
+※本番環境のアカウントに接続されます。開発中の動作は予告なく変更される場合があります。
+
+---
+
 ## ✨ 主な機能
 - ご当地ワード → OpenAI API で都道府県判定
 - ユーザー状態（pending）と寄付履歴を DynamoDB に保存
@@ -69,11 +77,37 @@ AWS Lambda (Serverless Framework, TypeScript)
 
 ---
 
-## 📦 デプロイ
+## 📦 デプロイ手順
+### 事前準備（初回のみ）
+1. AWS アカウントで **IAMユーザー** を作成し、Access Key / Secret を発行する  
+   - dev 用 → `dev-admin`  
+   - prod 用 → `prod-admin`  
+   - 最小権限ポリシーを付与（AdministratorAccess か、必要権限を限定）
+
+2. ローカル環境で AWS CLI にプロファイルを登録する
+   ```bash
+   # 開発用
+   aws configure --profile chi-pochi-dev
+
+   # 本番用
+   aws configure --profile chi-pochi-prod
+   ```
+   - `Default region` は `ap-northeast-1`
+   - `Output format` は `json`
+
+3. 設定確認
+   ```
+   aws sts get-caller-identity --profile chi-pochi-prod
+   ```
+
+### デプロイ実行
+
 ```
-npm run deploy:dev   # 開発環境
-npm run deploy:prod  # 本番環境
+npm run deploy:dev   # 開発環境へデプロイ（chi-pochi-dev プロファイル使用）
+npm run deploy:prod  # 本番環境へデプロイ（chi-pochi-prod プロファイル使用）
 ```
+
+---
 
 ## 💾 データベース設計
 - 詳細は[DynamoDB 設計ドキュメント](/docs/dynamodb.md)を参照してください。
