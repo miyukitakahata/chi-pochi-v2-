@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "typecheck": "tsc --noEmit",
-    "dev": "powershell -Command \"$env:AWS_PROFILE='chi-pochi-dev'; $env:AWS_SDK_LOAD_CONFIG='1'; $env:AWS_REGION='ap-northeast-1'; serverless offline --stage dev\"",
-    "deploy:dev": "npm run typecheck && sls deploy --stage dev --aws-profile $AWS_PROFILE_DEV",
-    "deploy:prod": "npm run typecheck && sls deploy --stage prod --aws-profile $AWS_PROFILE_PROD"
+    "dev": "cross-env AWS_PROFILE=chi-pochi-dev AWS_SDK_LOAD_CONFIG=1 AWS_REGION=ap-northeast-1 serverless offline --stage dev",
+    "deploy:dev": "npx serverless deploy --stage dev --aws-profile chi-pochi-dev",
+    "deploy:prod": "npx serverless deploy --stage prod --aws-profile chi-pochi-prod"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.152",
     "@types/node": "^24.3.0",
+    "cross-env": "^10.0.0",
     "serverless-offline": "^14.4.0",
     "typescript": "^5.9.2"
   }
