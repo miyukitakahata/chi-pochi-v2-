@@ -23,7 +23,9 @@
   "homepage": "https://github.com/miyukitakahata/chi-pochi-v2-#readme",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.864.0",
+    "@aws-sdk/client-s3": "^3.876.0",
     "@aws-sdk/lib-dynamodb": "^3.864.0",
+    "@aws-sdk/s3-request-presigner": "^3.876.0",
     "@line/bot-sdk": "^10.1.1",
     "axios": "^1.11.0",
     "openai": "^5.12.2",

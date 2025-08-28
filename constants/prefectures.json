@@ -1,0 +1,23 @@
+[
+  { "name": "千葉県", "s3Key": "stamps/chiba.png" },
+  { "name": "青森県", "s3Key": "stamps/aomori.png" },
+  { "name": "北海道", "s3Key": "stamps/hokkaido.png" },
+  { "name": "神奈川県", "s3Key": "stamps/kanagawa.png" },
+  { "name": "新潟県", "s3Key": "stamps/nigata.png" },
+  { "name": "埼玉県", "s3Key": "stamps/saitama.png" },
+  { "name": "東京都", "s3Key": "stamps/tokyo.png" },
+  { "name": "石川県", "s3Key": "stamps/ishikawa.png" },
+  { "name": "福井県", "s3Key": "stamps/hukui.png" },
+  { "name": "山梨県", "s3Key": "stamps/yamanashi.png" },
+  { "name": "沖縄県", "s3Key": "stamps/okinawa.png" },
+  { "name": "群馬県", "s3Key": "stamps/gunma.png" },
+  { "name": "栃木県", "s3Key": "stamps/tochigi.png" },
+  { "name": "茨城県", "s3Key": "stamps/ibaraki.png" },
+  { "name": "福島県", "s3Key": "stamps/hukushima.png" },
+  { "name": "山形県", "s3Key": "stamps/yamagata.png" },
+  { "name": "秋田県", "s3Key": "stamps/akita.png" },
+  { "name": "宮城県", "s3Key": "stamps/miyagi.png" },
+  { "name": "岩手県", "s3Key": "stamps/iwate.png" }
+]
+
+

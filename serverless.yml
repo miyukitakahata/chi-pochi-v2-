@@ -17,7 +17,7 @@ provider:
     LINE_CHANNEL_SECRET: ${env:LINE_CHANNEL_SECRET}
     S3_BUCKET_NAME: ${env:S3_BUCKET_NAME}
     SUNABAR_TOKEN: ${env:SUNABAR_TOKEN}
-    MOCK_DONATION: ${env:MOCK_DONATION, 'true'}  # まずはモックで安全運転
+    MOCK_DONATION: ${env:MOCK_DONATION, 'true'}  # トークン切れのためモックで対応
 
     TABLE_USER_STATES: ${self:custom.tables.userStates}
     TABLE_DONATION_HISTORY: ${self:custom.tables.donationHistory}
